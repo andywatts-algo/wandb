@@ -1,0 +1,14 @@
+{
+	"name": "CartPole Study",
+	"build": {
+	  "dockerfile": "Dockerfile"
+	},
+	"postCreateCommand": "echo 'Setup complete!'",
+	"runArgs": [
+		"--privileged", 
+		"--net", "host",
+		"-e", "DISPLAY=host.docker.internal:0",
+		"-e", "XAUTHORITY=/tmp/.Xauthority",
+		"-v", "${localEnv:HOME}/.Xauthority:/tmp/.Xauthority"
+	]
+}
