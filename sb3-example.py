@@ -8,31 +8,31 @@ from wandb.integration.sb3 import WandbCallback
 
 config = {
     "policy_type": "MlpPolicy",
-    "total_timesteps": 25000,
+    "total_timesteps": 10000,
     "env_name": "CartPole-v1",
 }
 run = wandb.init(
-    project="sb3",
+    project="examples-wandb",
+    notes="v0.1 Minimal PPO on CartPole-v1",
     config=config,
-    sync_tensorboard=True,  # auto-upload sb3's tensorboard metrics
-    monitor_gym=True,  # auto-upload the videos of agents playing the game
-    save_code=True,  # optional
+    sync_tensorboard=True,  # Send ep_rew_mean++
+    monitor_gym=True,  # not working?
 )
 
 
 def make_env():
-    env = gym.make(config["env_name"])
+    env = gym.make(config["env_name"], render_mode="rgb_array")
     env = Monitor(env)  # record stats such as returns
     return env
 
 
 env = DummyVecEnv([make_env])
-# env = VecVideoRecorder(
-    # env,
-    # f"videos/{run.id}",
-    # record_video_trigger=lambda x: x % 2000 == 0,
-    # video_length=200,
-# )
+env = VecVideoRecorder(
+    env,
+    f"videos/{run.id}",
+    record_video_trigger=lambda x: x % 2000 == 0,
+    video_length=200,
+)
 model = PPO(config["policy_type"], env, verbose=1, tensorboard_log=f"runs/{run.id}")
 model.learn(
     total_timesteps=config["total_timesteps"],
