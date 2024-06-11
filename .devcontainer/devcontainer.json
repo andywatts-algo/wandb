@@ -1,5 +1,5 @@
 {
-	"name": "CartPole Study",
+	"name": "Weights & Biases Study",
 	"build": {
 	  "dockerfile": "Dockerfile"
 	},
